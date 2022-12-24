@@ -24,4 +24,13 @@ public class UploadController : Controller
         return Ok(result);
     }
 
+    [HttpGet("download")]
+    public async Task<IActionResult> Download(string fileName, CancellationToken cancellationToken)
+    {
+        var result = await _fileHandler.DownloadAsync(fileName, cancellationToken);
+
+        return File(result, "application/octet-stream", fileName);
+
+    }
+
 }

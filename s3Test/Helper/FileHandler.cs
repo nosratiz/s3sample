@@ -28,10 +28,7 @@ public class FileHandler : IFileHandler
     public async Task<IFileUploadResult?> UploadAsync(Stream? file, string displayName, string mimeType,
         string extension, CancellationToken cancellationToken)
     {
-        if (file == null)
-        {
-            return null;
-        }
+        if (file == null) return null;
 
         await CheckBucketAsync(cancellationToken);
 
@@ -43,7 +40,6 @@ public class FileHandler : IFileHandler
             InputStream = file,
             ContentType = mimeType,
         };
-        
 
         await _s3Client.PutObjectAsync(request, cancellationToken);
 
@@ -141,16 +137,19 @@ public class FileHandler : IFileHandler
         };
     }
 
-    public async Task<GetObjectResponse> DownloadAsync(string path, CancellationToken cancellationToken)
+    public async Task<Stream> DownloadAsync(string path, CancellationToken cancellationToken)
     {
+        var result = await _s3Client.GetObjectAsync(_options.Value.BucketName, path, cancellationToken);
 
-        return await _s3Client.GetObjectAsync(_options.Value.BucketName, path, cancellationToken);
+        return result.ResponseStream;
+
+
+
     }
 
     public async Task<GetObjectResponse> DownloadAsync(string path, string bucketName,
         CancellationToken cancellationToken)
     {
-
 
         var request = new GetObjectRequest
         {
@@ -163,7 +162,7 @@ public class FileHandler : IFileHandler
 
     public async Task DeleteAsync(string path, CancellationToken cancellationToken)
     {
-        
+
         var request = new DeleteObjectRequest
         {
             BucketName = _options.Value.BucketName,

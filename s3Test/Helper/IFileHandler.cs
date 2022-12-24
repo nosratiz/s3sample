@@ -12,7 +12,7 @@ public interface IFileHandler
 
     Task<IFileUploadResult> UploadFileAsync(IFormFile? file, string bucketName, CancellationToken cancellationToken = default);
 
-    Task<GetObjectResponse> DownloadAsync(string path, CancellationToken cancellationToken = default);
+    Task<Stream> DownloadAsync(string path, CancellationToken cancellationToken = default);
 
     Task<GetObjectResponse> DownloadAsync(string path, string bucketName, CancellationToken cancellationToken = default);
 
